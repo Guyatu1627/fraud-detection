@@ -79,3 +79,17 @@ The performance metrics across both transactional data streams are summarized be
 The **Random Forest Classifier** was selected as the production model for both transaction streams based on two factors:
 * **Handling Class Imbalance:** Accuracy is a misleading performance metric for highly skewed datasets (such as bank card fraud at 0.17%). The Random Forest ensemble maximized **AUC-PR** and **F1-Scores**, minimizing false negatives without excessively expanding false positive rates.
 * **Non-linear Relationship Modeling:** While Logistic Regression offers fast, linear interpretability, it failed to capture the non-linear interaction patterns between temporal feature mechanics (such as velocity metrics like `time_since_signup` and `device_tx_count`). Random Forest naturally isolates these complex, high-risk intersections.
+
+
+---
+
+## Task 3: Model Explainability (SHAP Analysis)
+
+### 1. E-commerce Fraud Visual Interpretation Insights
+Through global SHAP analysis on the E-commerce Random Forest model, the features driving fraud classification were isolated:
+* **`time_since_signup` (Highest Impact):** Extremely low values (short duration between account creation and transaction execution) have a massive positive SHAP value impact, indicating highly programmatic, automated script attacks.
+* **`device_tx_count` & `ip_tx_count`:** High frequencies clustered on isolated devices or IP routes push individual predictions heavily toward the Fraud class, validating our transactional velocity engineering.
+* **`purchase_value`:** Outlier spikes in pricing scale display minor adjustments but remain subordinate to behavioral timing metrics.
+
+### 2. Bank Credit Card Stream Insights
+For the anonymized banking infrastructure dataset, SHAP summaries highlighted that specific underlying principal components (primarily `V14`, `V17`, and `V12`) act as the dominant triggers for classification thresholds. Even without explicit feature names, keeping these components uncorrupted during data handling is paramount for predictive consistency.
